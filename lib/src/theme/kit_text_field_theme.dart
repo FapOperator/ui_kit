@@ -227,6 +227,40 @@ class KitTextFieldTheme extends ThemeExtension<KitTextFieldTheme> {
     );
   }
 
+  /// Returns a new theme where every non-null field of [other] overrides
+  /// the corresponding field of `this`. Returns `this` unchanged when
+  /// [other] is `null`. Used by `KitTextField.themeOverride` to patch the
+  /// ambient theme for a single instance.
+  KitTextFieldTheme merge(KitTextFieldTheme? other) {
+    if (other == null) return this;
+    return KitTextFieldTheme(
+      clearIcon: other.clearIcon ?? clearIcon,
+      obscureOnIcon: other.obscureOnIcon ?? obscureOnIcon,
+      obscureOffIcon: other.obscureOffIcon ?? obscureOffIcon,
+      searchIcon: other.searchIcon ?? searchIcon,
+      borderColor: other.borderColor ?? borderColor,
+      focusColor: other.focusColor ?? focusColor,
+      errorColor: other.errorColor ?? errorColor,
+      disabledBorderColor: other.disabledBorderColor ?? disabledBorderColor,
+      borderRadius: other.borderRadius ?? borderRadius,
+      idleBorderWidth: other.idleBorderWidth ?? idleBorderWidth,
+      focusedBorderWidth: other.focusedBorderWidth ?? focusedBorderWidth,
+      filled: other.filled ?? filled,
+      fillColor: other.fillColor ?? fillColor,
+      disabledFillColor: other.disabledFillColor ?? disabledFillColor,
+      textStyle: other.textStyle ?? textStyle,
+      hintStyle: other.hintStyle ?? hintStyle,
+      errorStyle: other.errorStyle ?? errorStyle,
+      helperStyle: other.helperStyle ?? helperStyle,
+      cursorColor: other.cursorColor ?? cursorColor,
+      iconColor: other.iconColor ?? iconColor,
+      contentPadding: other.contentPadding ?? contentPadding,
+      defaultMaxLength: other.defaultMaxLength ?? defaultMaxLength,
+      labelStyle: other.labelStyle ?? labelStyle,
+      labelGap: other.labelGap ?? labelGap,
+    );
+  }
+
   @override
   KitTextFieldTheme lerp(ThemeExtension<KitTextFieldTheme>? other, double t) {
     if (other is! KitTextFieldTheme) return this;

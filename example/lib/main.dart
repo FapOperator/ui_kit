@@ -216,6 +216,18 @@ class _DemoScreenState extends State<DemoScreen> {
             ),
             const SizedBox(height: 16.0),
 
+            const _SectionHeader(title: 'themeOverride (danger-primary)'),
+            KitButton.primary(
+              text: 'Удалить аккаунт',
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () {},
+              themeOverride: const KitButtonTheme(
+                primaryColor: Color(0xFFE53935),
+                onPrimaryColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16.0),
+
             const _SectionHeader(title: 'isExpanded: false (Row)'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -382,6 +394,24 @@ class _DemoScreenState extends State<DemoScreen> {
                 ).showSnackBar(SnackBar(content: Text('OTP entered: $v')));
               },
               enabled: _fieldsEnabled,
+            ),
+            const SizedBox(height: 16.0),
+
+            const _SectionHeader(
+              title: 'themeOverride (outlined вместо filled)',
+            ),
+            KitTextField(
+              label: 'Комментарий',
+              hintText: 'Без заливки, с обводкой',
+              themeOverride: KitTextFieldTheme(
+                filled: false,
+                borderColor: Colors.grey.shade400,
+                idleBorderWidth: 1.0,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+              ),
             ),
             const SizedBox(height: 16.0),
 

@@ -101,6 +101,24 @@ class KitButtonTheme extends ThemeExtension<KitButtonTheme> {
     );
   }
 
+  /// Returns a new theme where every non-null field of [other] overrides
+  /// the corresponding field of `this`. Returns `this` unchanged when
+  /// [other] is `null`. Used by `KitButton.themeOverride` to patch the
+  /// ambient theme for a single instance.
+  KitButtonTheme merge(KitButtonTheme? other) {
+    if (other == null) return this;
+    return KitButtonTheme(
+      primaryColor: other.primaryColor ?? primaryColor,
+      onPrimaryColor: other.onPrimaryColor ?? onPrimaryColor,
+      disabledColor: other.disabledColor ?? disabledColor,
+      disabledContentColor: other.disabledContentColor ?? disabledContentColor,
+      loaderColor: other.loaderColor ?? loaderColor,
+      borderRadius: other.borderRadius ?? borderRadius,
+      height: other.height ?? height,
+      textStyle: other.textStyle ?? textStyle,
+    );
+  }
+
   @override
   KitButtonTheme lerp(ThemeExtension<KitButtonTheme>? other, double t) {
     if (other is! KitButtonTheme) {

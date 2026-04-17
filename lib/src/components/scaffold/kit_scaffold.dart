@@ -51,6 +51,11 @@ class KitScaffold extends StatelessWidget {
   /// `Theme.of(context).scaffoldBackgroundColor`.
   final Color? backgroundColor;
 
+  /// Per-instance theme patch. Merged on top of the ambient
+  /// [KitScaffoldTheme] (via [KitScaffoldTheme.merge]), so you only
+  /// specify the fields you want to change for this specific screen.
+  final KitScaffoldTheme? themeOverride;
+
   final bool _useHorizontalPadding;
   final bool _useSafeArea;
 
@@ -66,6 +71,7 @@ class KitScaffold extends StatelessWidget {
     this.resizeToAvoidBottomInset = true,
     this.blocksAppBar = true,
     this.backgroundColor,
+    this.themeOverride,
     super.key,
   }) : _useHorizontalPadding = useHorizontalPadding,
        _useSafeArea = useSafeArea;
@@ -83,9 +89,11 @@ class KitScaffold extends StatelessWidget {
     bool useSafeArea = true,
     bool blocksAppBar = true,
     Color? backgroundColor,
+    KitScaffoldTheme? themeOverride,
     Key? key,
   }) {
     return KitScaffold._(
+      themeOverride: themeOverride,
       key: key,
       body: body,
       useHorizontalPadding: true,
@@ -114,9 +122,11 @@ class KitScaffold extends StatelessWidget {
     bool useSafeArea = true,
     bool blocksAppBar = true,
     Color? backgroundColor,
+    KitScaffoldTheme? themeOverride,
     Key? key,
   }) {
     return KitScaffold._(
+      themeOverride: themeOverride,
       key: key,
       body: body,
       useHorizontalPadding: false,
@@ -135,12 +145,14 @@ class KitScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final KitScaffoldTheme? kitTheme = theme.extension<KitScaffoldTheme>();
+    final KitScaffoldTheme kitTheme =
+        (theme.extension<KitScaffoldTheme>() ?? const KitScaffoldTheme())
+            .merge(themeOverride);
 
-    final double horizontalPadding = kitTheme?.horizontalPadding ?? 16.0;
-    final Color overlayColor = kitTheme?.overlayColor ?? Colors.black;
-    final double overlayOpacity = kitTheme?.overlayOpacity ?? 0.3;
-    final Color loaderColor = kitTheme?.loaderColor ?? theme.primaryColor;
+    final double horizontalPadding = kitTheme.horizontalPadding ?? 16.0;
+    final Color overlayColor = kitTheme.overlayColor ?? Colors.black;
+    final double overlayOpacity = kitTheme.overlayOpacity ?? 0.3;
+    final Color loaderColor = kitTheme.loaderColor ?? theme.primaryColor;
 
     Widget content = body;
 

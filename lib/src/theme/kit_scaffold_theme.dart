@@ -56,6 +56,20 @@ class KitScaffoldTheme extends ThemeExtension<KitScaffoldTheme> {
     );
   }
 
+  /// Returns a new theme where every non-null field of [other] overrides
+  /// the corresponding field of `this`. Returns `this` unchanged when
+  /// [other] is `null`. Used by `KitScaffold.themeOverride` to patch the
+  /// ambient theme for a single instance.
+  KitScaffoldTheme merge(KitScaffoldTheme? other) {
+    if (other == null) return this;
+    return KitScaffoldTheme(
+      horizontalPadding: other.horizontalPadding ?? horizontalPadding,
+      overlayColor: other.overlayColor ?? overlayColor,
+      overlayOpacity: other.overlayOpacity ?? overlayOpacity,
+      loaderColor: other.loaderColor ?? loaderColor,
+    );
+  }
+
   @override
   KitScaffoldTheme lerp(ThemeExtension<KitScaffoldTheme>? other, double t) {
     if (other is! KitScaffoldTheme) return this;

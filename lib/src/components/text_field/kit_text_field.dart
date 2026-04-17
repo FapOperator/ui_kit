@@ -169,6 +169,11 @@ class KitTextField extends StatefulWidget {
   /// value to override, or an empty list to opt out entirely.
   final Iterable<String>? autofillHints;
 
+  /// Per-instance theme patch. Merged on top of the ambient
+  /// [KitTextFieldTheme] (via [KitTextFieldTheme.merge]), so you only
+  /// specify the fields you want to change for this specific field.
+  final KitTextFieldTheme? themeOverride;
+
   final KitTextFieldVariant _variant;
   final bool _showClearButton;
   final bool _allowNegative;
@@ -203,6 +208,7 @@ class KitTextField extends StatefulWidget {
     this.autofocus = false,
     this.autocorrect = true,
     this.autofillHints,
+    this.themeOverride,
     bool showClearButton = false,
     bool allowNegative = false,
     super.key,
@@ -238,12 +244,14 @@ class KitTextField extends StatefulWidget {
     Iterable<String>? autofillHints,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -294,12 +302,14 @@ class KitTextField extends StatefulWidget {
     Iterable<String>? autofillHints,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -340,12 +350,14 @@ class KitTextField extends StatefulWidget {
     bool autofocus = false,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -388,12 +400,14 @@ class KitTextField extends StatefulWidget {
     bool autocorrect = true,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -438,12 +452,14 @@ class KitTextField extends StatefulWidget {
     bool autofocus = false,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -485,12 +501,14 @@ class KitTextField extends StatefulWidget {
     Iterable<String>? autofillHints,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -531,12 +549,14 @@ class KitTextField extends StatefulWidget {
     Iterable<String>? autofillHints,
     String? helperText,
     VoidCallback? onTap,
+    KitTextFieldTheme? themeOverride,
     Key? key,
   }) {
     return KitTextField._(
       key: key,
       helperText: helperText,
       onTap: onTap,
+      themeOverride: themeOverride,
       label: label,
       labelStyle: labelStyle,
       labelGap: labelGap,
@@ -683,32 +703,34 @@ class _KitTextFieldState extends State<KitTextField> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final KitTextFieldTheme? kitTheme = theme.extension<KitTextFieldTheme>();
+    final KitTextFieldTheme kitTheme =
+        (theme.extension<KitTextFieldTheme>() ?? const KitTextFieldTheme())
+            .merge(widget.themeOverride);
 
-    final Color borderColor = kitTheme?.borderColor ?? Colors.grey.shade400;
-    final Color focusColor = kitTheme?.focusColor ?? theme.primaryColor;
-    final Color errorColor = kitTheme?.errorColor ?? Colors.red;
+    final Color borderColor = kitTheme.borderColor ?? Colors.grey.shade400;
+    final Color focusColor = kitTheme.focusColor ?? theme.primaryColor;
+    final Color errorColor = kitTheme.errorColor ?? Colors.red;
     final Color disabledBorderColor =
-        kitTheme?.disabledBorderColor ?? borderColor;
-    final double radius = kitTheme?.borderRadius ?? 8.0;
-    final double idleBorderWidth = kitTheme?.idleBorderWidth ?? 1.0;
-    final double focusedBorderWidth = kitTheme?.focusedBorderWidth ?? 2.0;
+        kitTheme.disabledBorderColor ?? borderColor;
+    final double radius = kitTheme.borderRadius ?? 8.0;
+    final double idleBorderWidth = kitTheme.idleBorderWidth ?? 1.0;
+    final double focusedBorderWidth = kitTheme.focusedBorderWidth ?? 2.0;
 
-    final bool filled = kitTheme?.filled ?? false;
-    final Color? baseFillColor = kitTheme?.fillColor;
+    final bool filled = kitTheme.filled ?? false;
+    final Color? baseFillColor = kitTheme.fillColor;
     final Color? disabledFillColor =
-        kitTheme?.disabledFillColor ?? baseFillColor;
+        kitTheme.disabledFillColor ?? baseFillColor;
     final Color? effectiveFillColor =
         widget.enabled ? baseFillColor : disabledFillColor;
 
     final EdgeInsetsGeometry contentPadding =
-        kitTheme?.contentPadding ??
+        kitTheme.contentPadding ??
         const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0);
 
     final TextStyle labelStyle =
-        widget.labelStyle ?? kitTheme?.labelStyle ?? _defaultLabelStyle();
+        widget.labelStyle ?? kitTheme.labelStyle ?? _defaultLabelStyle();
     final double labelGap =
-        widget.labelGap ?? kitTheme?.labelGap ?? 8.0;
+        widget.labelGap ?? kitTheme.labelGap ?? 8.0;
 
     // maxLength: explicit per-field → theme default → 255 fallback.
     // When the limit comes from the theme (i.e. the field didn't ask for
@@ -716,11 +738,11 @@ class _KitTextFieldState extends State<KitTextField> {
     // limit instead of a user-facing hint.
     final bool maxLengthExplicit = widget.maxLength != null;
     final int effectiveMaxLength =
-        widget.maxLength ?? kitTheme?.defaultMaxLength ?? 255;
+        widget.maxLength ?? kitTheme.defaultMaxLength ?? 255;
     final bool hideCounter =
         widget._variant == KitTextFieldVariant.otp || !maxLengthExplicit;
 
-    final Color? iconColor = kitTheme?.iconColor;
+    final Color? iconColor = kitTheme.iconColor;
 
     Widget field = TextFormField(
       controller: _controller,
@@ -730,8 +752,8 @@ class _KitTextFieldState extends State<KitTextField> {
       autocorrect: widget.autocorrect,
       autofillHints: widget.autofillHints,
       textCapitalization: widget.textCapitalization,
-      style: kitTheme?.textStyle,
-      cursorColor: kitTheme?.cursorColor,
+      style: kitTheme.textStyle,
+      cursorColor: kitTheme.cursorColor,
       onChanged: _handleChanged,
       onFieldSubmitted: _handleSubmitted,
       onTap: widget.onTap,
@@ -753,11 +775,11 @@ class _KitTextFieldState extends State<KitTextField> {
       readOnly: widget.readOnly,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: kitTheme?.hintStyle,
+        hintStyle: kitTheme.hintStyle,
         helperText: widget.helperText,
-        helperStyle: kitTheme?.helperStyle,
+        helperStyle: kitTheme.helperStyle,
         errorText: widget.errorText,
-        errorStyle: kitTheme?.errorStyle,
+        errorStyle: kitTheme.errorStyle,
         prefixIcon: _buildPrefix(kitTheme),
         suffixIcon: buildKitTextFieldSuffix(
           variant: widget._variant,

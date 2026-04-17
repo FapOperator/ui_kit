@@ -72,6 +72,19 @@ class KitButton extends StatefulWidget {
   /// the current variant/enabled state.
   final Color? loaderColor;
 
+  /// Per-instance theme patch. Merged on top of the ambient
+  /// [KitButtonTheme] (via [KitButtonTheme.merge]), so you only specify
+  /// the fields you want to change for this specific button.
+  ///
+  /// ```dart
+  /// KitButton.primary(
+  ///   text: 'Удалить',
+  ///   themeOverride: const KitButtonTheme(primaryColor: Colors.red),
+  ///   onPressed: _delete,
+  /// );
+  /// ```
+  final KitButtonTheme? themeOverride;
+
   final KitButtonVariant _variant;
 
   const KitButton._({
@@ -83,6 +96,7 @@ class KitButton extends StatefulWidget {
     this.isExpanded = true,
     this.semanticLabel,
     this.loaderColor,
+    this.themeOverride,
     super.key,
   }) : _variant = variant;
 
@@ -97,11 +111,13 @@ class KitButton extends StatefulWidget {
     bool isExpanded = true,
     String? semanticLabel,
     Color? loaderColor,
+    KitButtonTheme? themeOverride,
     Key? key,
   }) {
     return KitButton._(
       key: key,
       text: text,
+      themeOverride: themeOverride,
       variant: KitButtonVariant.primary,
       onPressed: onPressed,
       isLoading: isLoading,
@@ -124,11 +140,13 @@ class KitButton extends StatefulWidget {
     bool isExpanded = true,
     String? semanticLabel,
     Color? loaderColor,
+    KitButtonTheme? themeOverride,
     Key? key,
   }) {
     return KitButton._(
       key: key,
       text: text,
+      themeOverride: themeOverride,
       variant: KitButtonVariant.secondary,
       onPressed: onPressed,
       isLoading: isLoading,
@@ -151,11 +169,13 @@ class KitButton extends StatefulWidget {
     bool isExpanded = false,
     String? semanticLabel,
     Color? loaderColor,
+    KitButtonTheme? themeOverride,
     Key? key,
   }) {
     return KitButton._(
       key: key,
       text: text,
+      themeOverride: themeOverride,
       variant: KitButtonVariant.text,
       onPressed: onPressed,
       isLoading: isLoading,
@@ -207,16 +227,18 @@ class _KitButtonState extends State<KitButton> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final KitButtonTheme? kitTheme = theme.extension<KitButtonTheme>();
+    final KitButtonTheme kitTheme =
+        (theme.extension<KitButtonTheme>() ?? const KitButtonTheme())
+            .merge(widget.themeOverride);
 
-    final Color primaryColor = kitTheme?.primaryColor ?? theme.primaryColor;
-    final Color onPrimaryColor = kitTheme?.onPrimaryColor ?? Colors.white;
+    final Color primaryColor = kitTheme.primaryColor ?? theme.primaryColor;
+    final Color onPrimaryColor = kitTheme.onPrimaryColor ?? Colors.white;
     final Color disabledColor =
-        kitTheme?.disabledColor ?? Colors.grey.shade400;
+        kitTheme.disabledColor ?? Colors.grey.shade400;
     final Color disabledContentColor =
-        kitTheme?.disabledContentColor ?? Colors.grey.shade500;
-    final double radius = kitTheme?.borderRadius ?? 12.0;
-    final double height = kitTheme?.height ?? 48.0;
+        kitTheme.disabledContentColor ?? Colors.grey.shade500;
+    final double radius = kitTheme.borderRadius ?? 12.0;
+    final double height = kitTheme.height ?? 48.0;
     final double loaderSize = (height * 0.5).clamp(16.0, 28.0);
 
     final bool isLoading = widget.isLoading || _isProcessing;
@@ -243,14 +265,14 @@ class _KitButtonState extends State<KitButton> {
             primaryColor: primaryColor,
             onPrimaryColor: onPrimaryColor,
             disabledContentColor: disabledContentColor,
-            loaderColor: widget.loaderColor ?? kitTheme?.loaderColor,
+            loaderColor: widget.loaderColor ?? kitTheme.loaderColor,
             isDisabled: isDisabled,
             isLoading: isLoading,
             isExpanded: widget.isExpanded,
             loaderSize: loaderSize,
             text: widget.text,
             icon: widget.icon,
-            textStyle: kitTheme?.textStyle,
+            textStyle: kitTheme.textStyle,
           ),
         ),
       ),
